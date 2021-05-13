@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.MainActivity">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:gravity="center"
+           android:layout_margin="@dimen/_80sdp"
+           android:orientation="vertical">
+           <ProgressBar
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:visibility="visible"
+               />
+       </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/topLay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_centerVertical="true">
+
+
+            <ImageView
+
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_120sdp"
+                android:background="@drawable/app_icon" />
+        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/buttomLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_below="@id/topLay"
+                android:layout_marginTop="@dimen/_70sdp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Encrypt Chat"
+                    android:textSize="@dimen/_35sdp"
+                    android:textStyle="bold"
+                    android:textColor="#3DBE29"
+                    android:shadowColor="#242B2E"
+                    android:shadowDx="1"
+                    android:shadowDy="10"
+                    android:shadowRadius="1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Develop by Jyotirmoy"
+                    android:textSize="@dimen/_15sdp"
+                    android:textColor="#242B2E"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/_10sdp"/>
+
+            </LinearLayout>
+
+
+
+
+
+
+</RelativeLayout>
