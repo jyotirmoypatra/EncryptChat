@@ -55,7 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     TextView receiverName;
     ImageView backBtn, video, audio;
 
-    CardView sendBtn;
+    CardView sendBtn,clip;
     EditText editMessage;
     FirebaseAuth auth;
     FirebaseDatabase database;
@@ -80,6 +80,8 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+
 
         getSupportActionBar().hide();
 
@@ -223,6 +225,26 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+// .............  Receiver Profile details activity...................//
+        receiverName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, ReceiverProfile.class);
+                intent.putExtra("name", ReceiverName);
+                intent.putExtra("ReceiverImage", ReceiverImage);
+                intent.putExtra("uid", ReceiverUid);
+               ChatActivity.this.startActivity(intent);
+            }
+        });
+
+        clip=findViewById(R.id.clip);
+        clip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ChatActivity.this, "attach file", Toast.LENGTH_SHORT).show();
             }
         });
     }
