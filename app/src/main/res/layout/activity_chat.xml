@@ -22,46 +22,80 @@
             android:layout_marginLeft="@dimen/_8sdp"
             android:background="@drawable/ic_back" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/Receiver_Profile_image"
-            android:layout_width="@dimen/_36sdp"
-            android:layout_height="@dimen/_36sdp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/_6sdp"
-            android:src="@drawable/profile" />
 
-        <TextView
-            android:id="@+id/Receiver_name"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/receiverInfo"
+            android:layout_width="@dimen/_150sdp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:ellipsize="end"
-            android:maxWidth="@dimen/_80sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:orientation="horizontal">
 
-            android:maxLines="1"
-            android:text="UserName"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/Receiver_Profile_image"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_gravity="center"
 
-            android:textColor="@color/white"
-            android:textSize="@dimen/_16sdp"
-            android:textStyle="bold" />
+                android:layout_marginLeft="@dimen/_6sdp"
+                android:src="@drawable/profile" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/Receiver_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:ellipsize="end"
+                    android:maxWidth="@dimen/_100sdp"
+                    android:maxLines="1"
+                    android:text="UserName"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15sdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/onlineStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Online"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:textColor="#0EEA17" />
+
+            </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/videoCall"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/_75sdp"
-            android:background="@drawable/ic_video" />
+        </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/_25sdp"
+          android:layout_gravity="center">
+          <ImageView
+              android:id="@+id/videoCall"
+              android:layout_width="@dimen/_20sdp"
+              android:layout_height="@dimen/_20sdp"
+              android:layout_gravity="center"
+              android:layout_marginLeft="@dimen/_25sdp"
+              android:background="@drawable/ic_video" />
 
-        <ImageView
-            android:id="@+id/audioCall"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/_20sdp"
-            android:background="@drawable/ic_audio" />
+          <ImageView
+              android:id="@+id/audioCall"
+              android:layout_width="@dimen/_20sdp"
+              android:layout_height="@dimen/_20sdp"
+              android:layout_gravity="center"
+              android:layout_marginLeft="@dimen/_20sdp"
+              android:background="@drawable/ic_audio" />
+      </LinearLayout>
+
+
 
 
     </LinearLayout>
@@ -143,10 +177,10 @@
             android:id="@+id/clip"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_38sdp"
-            android:layout_margin="@dimen/_3sdp"
-            app:cardBackgroundColor="#216504"
-
             android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/_3sdp"
+
+            app:cardBackgroundColor="#216504"
             app:cardCornerRadius="@dimen/_350sdp">
 
             <ImageView

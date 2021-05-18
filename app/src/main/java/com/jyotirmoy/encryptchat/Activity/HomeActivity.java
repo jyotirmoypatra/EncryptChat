@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +43,7 @@ public class HomeActivity extends AppCompatActivity {
     FirebaseDatabase database;
     FirebaseStorage storage;
     DatabaseReference reference;
-
+    FirebaseUser user ;
     RecyclerView mainUserRecyclerView;
     UserAdapter adapter;
     ArrayList<Users> usersArrayList;
@@ -58,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
 
         isNetworkConnected();
 
-        progressBar=findViewById(R.id.loadUser);
+        progressBar = findViewById(R.id.loadUser);
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -131,6 +132,33 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!(auth.getCurrentUser()==null)){
+            String currentId = FirebaseAuth.getInstance().getUid();
+//            database = FirebaseDatabase.getInstance();
+            database.getReference().child("presence").child(currentId).setValue("Online");
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(!(auth.getCurrentUser() ==null)){
+            String currentId= FirebaseAuth.getInstance().getUid();
+       //     database=FirebaseDatabase.getInstance();
+            database.getReference().child("presence").child(currentId).setValue("Offline");
+        }
+
+
+
+    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.topmenu, menu);
@@ -152,10 +180,14 @@ public class HomeActivity extends AppCompatActivity {
                 break;
 
             case R.id.logout:
+                String currentId= FirebaseAuth.getInstance().getUid();
+                database.getReference().child("presence").child(currentId).setValue("Offline");
+
                 auth.signOut();
                 Toast.makeText(HomeActivity.this, "Sign Out Successfully", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                 finish();
+
                 break;
             case R.id.deleteAccount:
 
@@ -171,7 +203,6 @@ public class HomeActivity extends AppCompatActivity {
                         pd.setMessage("Deleting..");
                         pd.setCancelable(false);
                         pd.show();
-
 
 
                         reference.child(auth.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -224,4 +255,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
     }
+
+
 }

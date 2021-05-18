@@ -8,9 +8,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,10 +56,11 @@ public class ChatActivity extends AppCompatActivity {
 
     String ReceiverImage, ReceiverUid, ReceiverName, SenderUID;
     CircleImageView profileImage;
-    TextView receiverName;
+    TextView receiverName, onlineStatus;
+    LinearLayout receiverInfo;
     ImageView backBtn, video, audio;
 
-    CardView sendBtn,clip;
+    CardView sendBtn, clip;
     EditText editMessage;
     FirebaseAuth auth;
     FirebaseDatabase database;
@@ -69,8 +74,6 @@ public class ChatActivity extends AppCompatActivity {
     MessagesAdapter adapter;
 
 
-
-
     public byte encryptionKey[] = {9, 115, 51, 86, 105, 4, -31, -23, -68, 88, 17, 20, 3, -105, 119, -53};
     public Cipher cipher, decipher;
     public SecretKeySpec secretKeySpec;
@@ -82,14 +85,13 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
 
-
         getSupportActionBar().hide();
-
+        database = FirebaseDatabase.getInstance();
 
         backBtn = findViewById(R.id.back_btn);
         video = findViewById(R.id.videoCall);
         audio = findViewById(R.id.audioCall);
-
+        onlineStatus = findViewById(R.id.onlineStatus);
 
         video.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +121,34 @@ public class ChatActivity extends AppCompatActivity {
 
         profileImage = findViewById(R.id.Receiver_Profile_image);
         receiverName = findViewById(R.id.Receiver_name);
+        receiverInfo = findViewById(R.id.receiverInfo);
+
+
+        //Show Online offline status//
+        database.getReference().child("presence").child(ReceiverUid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String status = snapshot.getValue(String.class);
+                    if (!status.isEmpty()) {
+                        if(status.equals("Offline")){
+                            onlineStatus.setVisibility(View.GONE);
+                        }
+                        else {
+                            onlineStatus.setText(status);
+                            onlineStatus.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         messageAdapter = findViewById(R.id.messageAdapter);
         messagesArrayList = new ArrayList<>();
@@ -140,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
         senderRoom = SenderUID + ReceiverUid;
         receiverRoom = ReceiverUid + SenderUID;
 
-        database = FirebaseDatabase.getInstance();
+
         //DatabaseReference chatReference = database.getReference().child("chats").child(senderRoom).child("messages");
 
         try {
@@ -228,19 +258,50 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+
+        //............Typing... message status.......//
+        final Handler handler = new Handler();
+        editMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                database.getReference().child("presence").child(SenderUID).setValue("Typing...");
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(userStoppedTyping, 800);
+
+            }
+
+            Runnable userStoppedTyping = new Runnable() {
+                @Override
+                public void run() {
+                    database.getReference().child("presence").child(SenderUID).setValue("Online");
+                }
+            };
+        });
+
+
 // .............  Receiver Profile details activity...................//
-        receiverName.setOnClickListener(new View.OnClickListener() {
+        receiverInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChatActivity.this, ReceiverProfile.class);
                 intent.putExtra("name", ReceiverName);
                 intent.putExtra("ReceiverImage", ReceiverImage);
                 intent.putExtra("uid", ReceiverUid);
-               ChatActivity.this.startActivity(intent);
+                ChatActivity.this.startActivity(intent);
             }
         });
 
-        clip=findViewById(R.id.clip);
+        clip = findViewById(R.id.clip);
         clip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,8 +309,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     private String AESEncryptionMethod(String string) {
@@ -278,4 +337,17 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String currentId = FirebaseAuth.getInstance().getUid();
+        database.getReference().child("presence").child(currentId).setValue("Online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String currentId= FirebaseAuth.getInstance().getUid();
+        database.getReference().child("presence").child(currentId).setValue("Offline");
+    }
 }
