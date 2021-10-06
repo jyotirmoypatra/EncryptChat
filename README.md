@@ -1,5 +1,4 @@
 # EncryptChat
-# EncryptChat
 
 <table>
   <tr>
